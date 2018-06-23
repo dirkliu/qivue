@@ -1,7 +1,7 @@
 {
   "name": "qivue",
   "version": "1.0.0",
-  "description": "7约月的vue ui库",
+  "description": "7月的vue ui库",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,5 +15,18 @@
   "bugs": {
     "url": "https://github.com/dirkliu/qivue/issues"
   },
-  "homepage": "https://github.com/dirkliu/qivue#readme"
+  "homepage": "https://github.com/dirkliu/qivue#readme",
+  "dependencies": {
+    "vue": "^2.5.16"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "css-loader": "^0.28.11",
+    "node-sass": "^4.9.0",
+    "style-loader": "^0.21.0",
+    "vue-loader": "^15.2.4",
+    "vue-template-compiler": "^2.5.16",
+    "webpack": "^4.12.0"
+  }
 }
