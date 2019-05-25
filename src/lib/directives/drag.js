@@ -2,7 +2,7 @@ import Vue from 'vue'
  
 // v-dialogDrag: 弹窗拖拽
 Vue.directive('drag', {
-  bind(el, binding, vnode, oldVnode) {
+  bind (el, binding, vnode, oldVnode) {
       el.style.cursor = 'move'
  
     // 获取原有属性 ie dom元素.currentStyle 火狐谷歌 window.getComputedStyle(dom元素, null)
@@ -33,5 +33,21 @@ Vue.directive('drag', {
         document.onmouseup = null;
       }
     }
+  },
+
+  inserted () {
+    console.log('inserted')
+  },
+
+  update () {
+    console.log('update')
+  },
+
+  componentUpdated () {
+    console.log('componentUpdated')
+  },
+
+  unbind () {
+    console.log('unbind')
   }
 })

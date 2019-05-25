@@ -1,55 +1,25 @@
 {
   "name": "qivue",
-  "version": "1.0.0",
-  "description": "7月的vue ui库",
-  "main": "index.js",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dirkliu/qivue.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/dirkliu/qivue/issues"
-  },
-  "homepage": "https://github.com/dirkliu/qivue#readme",
   "dependencies": {
-    "vue": "^2.5.16"
+    "core-js": "^2.6.5",
+    "vue": "^2.6.10"
   },
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-eslint": "^8.2.5",
-    "babel-loader": "^7.1.4",
-    "css-loader": "^0.28.11",
-    "eslint": "^5.0.1",
-    "eslint-loader": "^2.0.0",
-    "file-loader": "^1.1.11",
-    "html-webpack-plugin": "^3.2.0",
-    "http-proxy-middleware": "^0.18.0",
-    "karma": "^2.0.4",
-    "koa": "^2.5.1",
-    "node-sass": "^4.9.0",
-    "rimraf": "^2.6.2",
-    "rollup": "^0.62.0",
-    "sass-loader": "^7.0.3",
-    "style-loader": "^0.21.0",
-    "url-loader": "^1.0.1",
-    "vue-loader": "^15.2.4",
-    "vue-style-loader": "^4.1.0",
-    "vue-template-compiler": "^2.5.16",
-    "webpack": "^4.12.0",
-    "webpack-merge": "^4.1.3"
-  },
-  "engines": {
-    "node": ">= 4.0.0",
-    "npm": ">= 3.0.0"
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+    "@vue/cli-plugin-babel": "^3.7.0",
+    "@vue/cli-plugin-eslint": "^3.7.0",
+    "@vue/cli-service": "^3.7.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^7.1.0",
+    "vue-template-compiler": "^2.5.21"
+  }
 }
