@@ -17,7 +17,7 @@ export default {
     props: ['value', 'width', 'height', 'top', 'left', 'right', 'bottom', 'zIndex', 'hideClose','closeIconStyle'],
     data () {
         return {
-            styleMap: {},
+            styleMap: {}, // 初始化时，传入的style对象。
             styleCloseIcon: {},
         }
     },
