@@ -1,9 +1,12 @@
 <template>
   <div id="app">
     <ul>
-      <li @click="move">移动</li>
+      <li><a href="#/">首页</a></li>
+      <li><a href="#/demoModal">可移动弹窗</a></li>
+      <li><a href="#/dateHourGrids">日期小时格子选择器</a></li>
     </ul>
-    <demo-modal ref="demoModal" v-model="visible"></demo-modal>
+    <router-view></router-view>
+    <!--<demo-modal ref="demoModal" v-model="visible"></demo-modal>-->
   </div>
 </template>
 
@@ -19,13 +22,6 @@ export default {
   },
 
   methods: {
-    move () {
-      // console.log('this.$refs.demoModal:', )
-      this.$refs.demoModal.$refs.modal.moveTo({
-        bottom: '50px',
-        right: '50px'
-      })
-    }
   },
 
   components: {
@@ -46,7 +42,6 @@ html, body {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
 }
 </style>
