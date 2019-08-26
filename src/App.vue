@@ -3,10 +3,9 @@
     <ul>
       <li><a href="#/">首页</a></li>
       <li><a href="#/demoModal">可移动弹窗</a></li>
-      <li><a href="#/dateHourGrids">日期小时格子选择器</a></li>
+      <li><a href="#/dateHour">日期小时格子选择器</a></li>
     </ul>
     <router-view></router-view>
-    <!--<demo-modal ref="demoModal" v-model="visible"></demo-modal>-->
   </div>
 </template>
 

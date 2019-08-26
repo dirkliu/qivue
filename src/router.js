@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import Home from './components/Home.vue'
-import DemoModal from './components/DemoModal.vue'
-import DateHourGrids from './components/DateHourGrids.vue'
+import Home from './views/Home.vue'
+import DemoModal from './views/DemoModal.vue'
+import DateHour from './views/DateHour.vue'
 
 Vue.use(Router)
 
@@ -20,9 +20,9 @@ export default new Router({
       component: DemoModal
     },
     {
-      path: '/dateHourGrids',
-      name: 'dateHourGrids',
-      component: DateHourGrids
+      path: '/dateHour',
+      name: 'dateHour',
+      component: DateHour
     }
   ]
 })
