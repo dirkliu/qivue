@@ -1,7 +1,7 @@
 <template>
   <div class="dateHourGrids">
     日期小时格子选择器
-    <day-hour-grids></day-hour-grids>
+    <day-hour-grids v-model="dayHours" @input="onSelectChange"></day-hour-grids>
   </div>
 </template>
 
@@ -9,7 +9,15 @@
   import DayHourGrids from '../lib/components/DayHourGrids.vue'
   export default {
     data () {
-      return {}
+      return {
+        dayHours: []
+      }
+    },
+
+    methods: {
+      onSelectChange (value) {
+        console.log('value:', this.dayHours)
+      }
     },
 
     components: {
