@@ -206,17 +206,7 @@
             ranges.push(currentRange)
             return
           }
-          // } else if (currentRange.end + 1 === item.hour) {
-          //   currentRange.end = item.hour
-          // } else {
-          //   ranges.push(currentRange)
-          //   currentRange = {
-          //     start: item.hour,
-          //     end: item.hour
-          //   }
-          // }
         })
-        console.log('ranges:', ranges)
         return ranges
       },
 
