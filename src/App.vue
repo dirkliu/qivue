@@ -10,7 +10,6 @@
 </template>
 
 <script>
-import DemoModal from './components/DemoModal.vue'
 export default {
   name: 'app',
 
@@ -21,10 +20,6 @@ export default {
   },
 
   methods: {
-  },
-
-  components: {
-    DemoModal
   }
 }
 </script>
