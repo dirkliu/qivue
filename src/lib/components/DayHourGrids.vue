@@ -23,22 +23,23 @@
     <div class="select-box" v-show="selectArea" 
       :style="{left: selectLeft + 'px', top: selectTop + 'px', width: selectWidth + 'px', height: selectHeight + 'px'}">    
     </div>
-    <div class="selected-day-hours">
+    <div class="selected-day-hours" v-if="value.length">
       <div class="selected-headeer">选中的时间段：</div>
       <div class="select-day-item" v-for="item in value">
-        {{item.text}}:
-        <span class="range-tag" v-for="range in getRangesFromHours(item.hours)">{{range | rangeFormatter}}</span>
+        {{days[item.day - 1]}}:
+        <span class="range-tag" v-for="range in item.hours">{{range.start}} - {{range.end}}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  const DAYS = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
   var dayHourJson = []
   for (let i = 1; i <= 7; i++) {
     var day = {
       day: i,
-      text: '星期' + ['一', '二', '三', '四','五','六','日'][i - 1],
+      text: DAYS[i - 1],
       hours: []
     }
     for (let k = 0; k < 24; k++) {
@@ -64,13 +65,8 @@
         pageLeft: 0, // 组件至页面左边的距离，
         pageTop: 0,
         gridHeight: 22, // 单个格子高度
+        days: DAYS,
         dayHours: dayHourJson
-      }
-    },
-
-    filters: {
-      rangeFormatter (range) {
-        return (range.start > 9 ? range.start : '0' + range.start)  + ':00' + '-' + (range.end > 9 ? range.end : '0' + range.end) + ':59'
       }
     },
 
@@ -79,14 +75,14 @@
         if (!this.selectArea) {
           return 0
         }
-        return Math.min(this.selectArea.startX, this.selectArea.endX) - this.pageLeft
+        return Math.min(this.selectArea.startX, this.selectArea.endX)
       },
 
       selectTop () {
         if (!this.selectArea) {
           return 0
         }
-        return Math.min(this.selectArea.startY, this.selectArea.endY) - this.pageTop      
+        return Math.min(this.selectArea.startY, this.selectArea.endY)
       },
 
       selectWidth () {
@@ -100,7 +96,7 @@
         if (!this.selectArea) {
           return 0
         }
-        return Math.abs(this.selectArea.startY - this.selectArea.endY)        
+        return Math.abs(this.selectArea.startY - this.selectArea.endY)
       },
 
       selectRight () {
@@ -115,73 +111,52 @@
         return (this.$el.offsetWidth - 80) / 24
       },
 
-      // 矩形框的左上角的格子数
-      leftTopGrid () {
-        var position = {
-          x: 0,
-          y: 0
-        }
-        if (this.selectLeft > 70) {
-          position.x = Math.round((this.selectLeft - 70) / this.gridWidth)
-          position.x > 24 && (position.x = 24)
-        }
-        if (this.selectTop > 30) {
-          position.y = Math.round((this.selectTop - 30) / this.gridHeight)
-          position.y > 7 && (position.y = 7)
-        }
-        return position
-      },
-
       // 矩形框的右下角的格子数， 四舍五入
       rightBottomGrid () {
         var position = {
           x: 0,
           y: 0
         }
-        if (this.selectRight > 70) {
-          position.x = Math.round((this.selectRight - 70) / this.gridWidth)
+        let selectorPosition = this.$el.getBoundingClientRect()
+        let relativeLeft = this.selectRight - selectorPosition.left
+        let relativeTop = this.selectBottom - selectorPosition.top
+        if (relativeLeft > 70) {
+          position.x = Math.round((relativeLeft - 70) / this.gridWidth)
           position.x > 24 && (position.x = 24)
         }
-        if (this.selectBottom > 30) {
-          position.y = Math.round((this.selectBottom - 30) / this.gridHeight)
+        if (relativeTop > 30) {
+          position.y = Math.round((relativeTop - 30) / this.gridHeight)
           position.y > 7 && (position.y = 7)
         }
-        return position     
+        return position
       }
     },
 
     methods: {
-      _setPageLeft () {
-        var pageLeft = this.$el.offsetLeft
-        var parent = this.$el.offsetParent
-        while(parent != null){
-            pageLeft += parent.offsetLeft + parent.clientLeft
-            parent = parent.offsetParent
-        }
-        this.pageLeft = pageLeft
-      },
-
-      _setPageTop () {
-        var pageTop = this.$el.offsetTop
-        var parent = this.$el.offsetParent
-        while(parent != null){
-            pageTop += parent.offsetTop + parent.clientTop
-            parent = parent.offsetParent
-        }
-        this.pageTop = pageTop       
-      },
-
       _setModelValue () {
         this.$emit('input', this.dayHours.filter(item => item.hours.some(hour => hour.checked)).map(item => {
           return {
             day: item.day,
-            text: item.text,
-            hours: item.hours.filter(hour => hour.checked)
+            hours: this._getRangesFromHours(item.hours.filter(hour => hour.checked))
           }
         }))
       },
 
-      getRangesFromHours (hours) {
+      _setDayHours () {
+        this.value.forEach(item => {
+          console.log('day:', item.day)
+          let dayHour = this.dayHours.find(dayItem => dayItem.day === item.day)
+          item.hours.forEach(hourRange => {
+            let start = +hourRange.start.split(':')[0]
+            let end = +hourRange.end.split(':')[0]
+            for (let i = start; i <= end; i++) {
+              dayHour.hours[i].checked = true
+            }
+          })
+        })
+      },
+
+      _getRangesFromHours (hours) {
         let ranges = []
         let currentRange = null
         hours.forEach((item, index) => {
@@ -194,7 +169,10 @@
             if (currentRange.end + 1 === item.hour) {
               currentRange.end = item.hour
             } else {
-              ranges.push(currentRange)
+              ranges.push({
+                start: (currentRange.start > 9 ? currentRange.start : '0' + currentRange.start) + ':00',
+                end: (currentRange.end > 9 ? currentRange.end : '0' + currentRange.end) + ':59'
+              })
               currentRange = {
                 start: item.hour,
                 end: item.hour
@@ -203,11 +181,52 @@
           }
 
           if (index === hours.length - 1) {
-            ranges.push(currentRange)
+            ranges.push({
+              start: (currentRange.start > 9 ? currentRange.start : '0' + currentRange.start) + ':00',
+              end: (currentRange.end > 9 ? currentRange.end : '0' + currentRange.end) + ':59'
+            })
             return
           }
         })
         return ranges
+      },
+
+      _getLeftTopGrid () {
+        let position = {
+          x: 0,
+          y: 0
+        }
+        let selectorPosition = this.$el.getBoundingClientRect()
+        let relativeLeft = this.selectLeft - selectorPosition.left
+        let relativeTop = this.selectTop - selectorPosition.top
+        if (relativeLeft > 70) {
+          position.x = Math.round((relativeLeft - 70) / this.gridWidth)
+          position.x > 24 && (position.x = 24)
+        }
+        if (relativeTop > 30) {
+          position.y = Math.round((relativeTop - 30) / this.gridHeight)
+          position.y > 7 && (position.y = 7)
+        }
+        return position
+      },
+
+      _getRightBottomGrid () {
+        var position = {
+          x: 0,
+          y: 0
+        }
+        let selectorPosition = this.$el.getBoundingClientRect()
+        let relativeLeft = this.selectRight - selectorPosition.left
+        let relativeTop = this.selectBottom - selectorPosition.top
+        if (relativeLeft > 70) {
+          position.x = Math.round((relativeLeft - 70) / this.gridWidth)
+          position.x > 24 && (position.x = 24)
+        }
+        if (relativeTop > 30) {
+          position.y = Math.round((relativeTop - 30) / this.gridHeight)
+          position.y > 7 && (position.y = 7)
+        }
+        return position
       },
 
       onSelectHour (hour, event) {
@@ -218,10 +237,10 @@
       // 鼠标按下，设置选中区域起始点
       onMouseDown (event) {
         this.selectArea = {
-          startX: event.pageX,
-          startY: event.pageY,
-          endX: event.pageX,
-          endY: event.pageY
+          startX: event.clientX,
+          startY: event.clientY,
+          endX: event.clientX,
+          endY: event.clientY
         }
       },
 
@@ -229,26 +248,28 @@
       onMouseMove (event) {
         if (this.selectArea) {
           Object.assign(this.selectArea, {
-            endX: event.pageX,
-            endY: event.pageY
+            endX: event.clientX,
+            endY: event.clientY
           })
-        }        
+        }
       },
 
       _checkHoursByRect (leftTopGrid, rightBottomGrid) {
         var selectHours = this.dayHours.filter(item => {
           return item.day >= leftTopGrid.y + 1 && item.day < rightBottomGrid.y + 1
         }).map(item => item.hours).reduce((x, y) => x.concat(y), []).filter(item => {
-          return item.hour >= leftTopGrid.x && item.hour < rightBottomGrid.x 
+          return item.hour >= leftTopGrid.x && item.hour < rightBottomGrid.x
         })
         var isAllChecked = selectHours.every(item => item.checked)
-        selectHours.forEach(item => item.checked = !isAllChecked)
+        selectHours.forEach(item => {
+          item.checked = !isAllChecked
+        })
       },
 
       // 鼠标释放，清除选中区域
       onMouseUp (event) {
         if (this.selectArea) {
-          this._checkHoursByRect(this.leftTopGrid, this.rightBottomGrid)
+          this._checkHoursByRect(this._getLeftTopGrid(), this._getRightBottomGrid())
           // 改变后的值返回值父组件的v-model中
           this._setModelValue()
           this.selectArea = null
@@ -258,9 +279,11 @@
       }
     },
 
+    created () {
+      this._setDayHours()
+    },
+
     mounted () {
-      this._setPageLeft()
-      this._setPageTop()
       document.addEventListener('mousemove', this.onMouseMove)
       document.addEventListener('mouseup', this.onMouseUp)
     },
@@ -275,6 +298,7 @@
 <style lang="scss">
 .day-hour-grids {
   position: relative;
+  line-height: 25px;
   
   .day-hour-content {
     padding: 15px 10px;
@@ -297,9 +321,11 @@
 
     .hours .hour-item {
       height: 15px;
+      line-height: 15px;
       text-align: left;
       background-color: transparent;
-      font-size: 0.5em;
+      font-size: 10px;
+      border: none;
     }
   }
 
@@ -329,7 +355,7 @@
   .select-box {
     width: 0;
     height: 0;
-    position: absolute;
+    position: fixed;
     left: 0;
     top: 0;
     background-color: rgba(198, 228, 139, 0.6);
