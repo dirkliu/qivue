@@ -2,11 +2,8 @@ import Vue from 'vue'
  
 // v-dialogDrag: 弹窗拖拽
 Vue.directive('drag', {
-  bind (el, binding, vnode, oldVnode) {
+  bind (el) {
       el.style.cursor = 'move'
- 
-    // 获取原有属性 ie dom元素.currentStyle 火狐谷歌 window.getComputedStyle(dom元素, null)
-    const sty = el.currentStyle || window.getComputedStyle(el, null)
  
     el.onmousedown = (e) => {
       // 鼠标按下，计算鼠标距离元素左边界和上边界的距离
@@ -28,7 +25,7 @@ Vue.directive('drag', {
         }
       }
  
-      document.onmouseup = function (e) {
+      document.onmouseup = function () {
         document.onmousemove = null;
         document.onmouseup = null;
       }

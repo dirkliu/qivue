@@ -15,7 +15,7 @@
     },
 
     methods: {
-      onSelectChange (value) {
+      onSelectChange () {
         console.log('value:', this.dayHours)
       }
     },

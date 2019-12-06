@@ -25,9 +25,9 @@
     </div>
     <div class="selected-day-hours" v-if="value.length">
       <div class="selected-headeer">选中的时间段：</div>
-      <div class="select-day-item" v-for="item in value">
+      <div class="select-day-item" v-for="(item, index) in value" :key="index">
         {{days[item.day - 1]}}:
-        <span class="range-tag" v-for="range in item.hours">{{range.start}} - {{range.end}}</span>
+        <span class="range-tag" v-for="(range, k) in item.hours"  :key="k">{{range.start}} - {{range.end}}</span>
       </div>
     </div>
   </div>
@@ -55,7 +55,9 @@
     props: {
       value: {
         type: Array,
-        default: []
+        default () {
+          return []
+        }
       }
     },
 
@@ -229,7 +231,7 @@
         return position
       },
 
-      onSelectHour (hour, event) {
+      onSelectHour (hour) {
         hour.checked = !hour.checked
         this._setModelValue()
       },
@@ -267,7 +269,7 @@
       },
 
       // 鼠标释放，清除选中区域
-      onMouseUp (event) {
+      onMouseUp () {
         if (this.selectArea) {
           this._checkHoursByRect(this._getLeftTopGrid(), this._getRightBottomGrid())
           // 改变后的值返回值父组件的v-model中
